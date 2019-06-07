@@ -16,6 +16,7 @@
             margin: 0 auto;
         }
     </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
 </head>
 
 <body>
@@ -25,6 +26,8 @@
         /** @type {CanvasRenderingContext2D} */
         var ctx = canvas.getContext('2d');
 
+        var gui = new dat.GUI();
+
         // Inital starting position
         var posX = 20,
             posY = canvas.height / 2;
@@ -33,13 +36,22 @@
         // Set up object to contain particles and set some default values
         var particles = {},
             particleIndex = 0,
-            settings = {
+            settings = { 
                 density: 20,
                 particleSize: 10,
                 startingX: canvas.width / 2,
                 startingY: canvas.height / 4,
                 gravity: 0.5
             };
+
+        gui.add(settings, 'density', 0, 20);
+        gui.add(settings, 'particleSize', 1, 50);
+        gui.add(settings, 'gravity', -2, 2);
+        gui.add(settings, 'startingY', 0, canvas.height * 0.75)
+        // gui.add(settings, 'groundLevel', 0, canvas.height);
+        // gui.add(settings, 'leftWall', 0, canvas.width * 0.4);
+        // gui.add(settings, 'rightWall', canvas.width * 0.6, canvas.width);
+        // gui.add(settings, 'blur', 0.1, 0.9);
 
         // Set up a function to create multiple particles
         function Particle() {
