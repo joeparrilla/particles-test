@@ -23,6 +23,8 @@
     <canvas id="canvas" width="600" height="600"></canvas>
     <script>
         canvas = document.getElementById('canvas');
+        canvas.width = window.innerWidth * 0.9;
+        canvas.height = window.innerHeight * 0.9;
         /** @type {CanvasRenderingContext2D} */
         var ctx = canvas.getContext('2d');
 
@@ -36,12 +38,15 @@
         // Set up object to contain particles and set some default values
         var particles = {},
             particleIndex = 0,
-            settings = { 
+            settings = {
                 density: 20,
                 particleSize: 10,
                 startingX: canvas.width / 2,
                 startingY: canvas.height / 4,
-                gravity: 0.5
+                gravity: 0.5,
+                groundLevel: canvas.height * 0.75,
+                leftWall: canvas.width * 0.25,
+                rightWall: canvas.width * 0.75
             };
 
         gui.add(settings, 'density', 0, 20);
@@ -76,6 +81,24 @@
         Particle.prototype.draw = function () {
             this.x += this.vx;
             this.y += this.vy;
+
+            // Bounce off the ground
+            if ((this.y + settings.particleSize) > settings.groundLevel) {
+                this.vy *= -0.6;
+                this.vx *= 0.75;
+                this.y = settings.groundLevel - settings.particleSize;
+            }
+
+            // Determine whether to bounce the particle off a wall
+            if (this.x - (settings.particleSize) <= settings.leftWall) {
+                this.vx *= -1;
+                this.x = settings.leftWall + (settings.particleSize);
+            }
+
+            if (this.x + (settings.particleSize) >= settings.rightWall) {
+                this.vx *= -1;
+                this.x = settings.rightWall - settings.particleSize;
+            }
 
             // Adjust for gravity
             this.vy += settings.gravity;
@@ -112,6 +135,12 @@
                     new Particle();
                 }
             }
+
+            // Draw a left, right walls and floor
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, settings.leftWall, canvas.height);
+            ctx.fillRect(settings.rightWall, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, settings.groundLevel, canvas.width, canvas.height);
 
             for (var i in particles) {
                 particles[i].draw();
