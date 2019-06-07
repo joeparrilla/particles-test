@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Particles</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        canvas {
+            background: #eee;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+        canvas = document.getElementById('canvas');
+        /** @type {CanvasRenderingContext2D} */
+        var ctx = canvas.getContext('2d');
+
+        //background
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        //square particle
+        ctx.fillStyle = "white";
+        ctx.fillRect(300, 200, 10, 10);
+
+        //round particle
+        ctx.beginPath();
+        ctx.fillStyle = "white";
+        ctx.arc(500, 200, 10, 0, Math.PI*2, true);
+        ctx.closePath();
+        ctx.fill();
+
+    </script>
+</body>
+
+</html>
